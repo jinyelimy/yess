@@ -1,5 +1,9 @@
 # YESS — Year-End Support System
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-yess--two.vercel.app-000000?style=for-the-badge&logo=vercel)](https://yess-two.vercel.app)
+
+> 공개 Vercel 미리보기: 현재 v0는 mock data만 사용합니다. 실제 Jarvis DB·SSO 연동 시점에는 사내망 Docker Compose 배포로 전환 예정입니다.
+
 사내 연말정산 패치 관리 + TF 업무 운영을 통합하는 웹 애플리케이션.
 한 문장으로: **"연말정산 패치 실행관리 시스템이면서 동시에 TF 업무 운영 보드"**.
 
