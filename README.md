@@ -1,4 +1,4 @@
-# YESS — Year-End Self System
+# YESS — Year-End Support System
 
 사내 연말정산 패치 관리 + TF 업무 운영을 통합하는 웹 애플리케이션.
 한 문장으로: **"연말정산 패치 실행관리 시스템이면서 동시에 TF 업무 운영 보드"**.
