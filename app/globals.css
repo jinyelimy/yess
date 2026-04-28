@@ -1,0 +1,245 @@
+/* YESS Design Tokens — Miro-inspired light theme
+   Reference: docs/DESIGN-v2.md, _design_input/uploads/DESIGN-miro.md
+   - White canvas, near-black text (#1c1c1e)
+   - Blue 450 (#5b76fe) primary interactive
+   - Pastel accents: coral/rose/teal/orange/yellow/moss
+   - Inter (display) + Noto Sans KR (body) substituting Roobert PRO
+   - Ring shadow border, 8/12/24/40px radii
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ── Surface (light, white canvas) ────────────────── */
+  --bg-canvas:     #ffffff;
+  --bg-surface:    #ffffff;
+  --bg-surface-2:  #f7f8fa;
+  --bg-sunken:     #f1f3f6;
+  --bg-hover:      #f0f2f6;
+  --bg-active:     #e9ebf1;
+
+  /* ── Borders ── */
+  --border-subtle:  #e9eaef;
+  --border-default: #c7cad5;
+  --border-strong:  #a5a8b5;
+  --ring:           224, 226, 232;
+  --ring-shadow:    0 0 0 1px rgb(var(--ring));
+
+  /* ── Text ── */
+  --text-primary:   #1c1c1e;
+  --text-secondary: #555a6a;
+  --text-tertiary:  #7a8194;
+  --text-disabled:  #a5a8b5;
+  --text-on-blue:   #ffffff;
+
+  /* ── Brand / Accent (Blue 450) ── */
+  --accent-50:  #eef1ff;
+  --accent-100: #dde3ff;
+  --accent-200: #c2cdff;
+  --accent-300: #93a4ff;
+  --accent-400: #7a8fff;
+  --accent-500: #5b76fe;
+  --accent-600: #3f5beb;
+  --accent-700: #2a41b6;
+  --accent-800: #1f3590;
+
+  /* ── Pastel surfaces ── */
+  --pastel-coral:    #ffc6c6;
+  --pastel-coral-d:  #600000;
+  --pastel-rose:     #ffd8f4;
+  --pastel-rose-d:   #7a1d5e;
+  --pastel-teal:     #c3faf5;
+  --pastel-teal-d:   #187574;
+  --pastel-orange:   #ffe6cd;
+  --pastel-orange-d: #8a4a17;
+  --pastel-yellow:   #fff3b8;
+
+  /* ── Chart palette ── */
+  --chart-yellow:   #ffe6a3;
+  --chart-pink:     #f8cbdd;
+  --chart-purple:   #c0c0f0;
+  --chart-purple-d: #8a8ae0;
+  --chart-yellow-d: #ecc566;
+  --chart-pink-d:   #e0a3c0;
+  --chart-neutral:  #efedf5;
+  --pastel-yellow-d: #746019;
+  --pastel-moss:     #d6ecd0;
+  --pastel-moss-d:   #1f5a2d;
+  --pastel-pink:     #fde0f0;
+  --pastel-red:      #fbd4d4;
+  --pastel-darkred:  #e3c5c5;
+  --pastel-blue:     #dde6ff;
+  --pastel-violet:   #e8dffb;
+  --pastel-violet-d: #4a2890;
+
+  /* ── Semantic ── */
+  --success:        #00b473;
+  --success-bg:     #d6f4e6;
+  --success-fg:     #086a44;
+
+  --warning:        #d97706;
+  --warning-bg:     #fff3b8;
+  --warning-fg:     #746019;
+
+  --danger:         #dc2626;
+  --danger-bg:      #fbd4d4;
+  --danger-fg:      #8b1d1d;
+
+  --info:           var(--accent-500);
+  --info-bg:        var(--pastel-blue);
+  --info-fg:        var(--accent-700);
+
+  /* ── Status palette ── */
+  --status-done-bg:       #d8efe1;
+  --status-done-fg:       #2e6f4a;
+  --status-done-dot:      #4ea878;
+
+  --status-progress-bg:   #fde0c8;
+  --status-progress-fg:   #8a4a17;
+  --status-progress-dot:  #e89765;
+
+  --status-scheduled-bg:  #dfe2fb;
+  --status-scheduled-fg:  #4a4f9c;
+  --status-scheduled-dot: #8a8ae0;
+
+  --status-review-bg:     #e6dffb;
+  --status-review-fg:     #5a3fa0;
+  --status-review-dot:    #9b82dc;
+
+  --status-pending-bg:    #eceef3;
+  --status-pending-fg:    #6b7080;
+  --status-pending-dot:   #b8bccb;
+
+  --status-hold-bg:       #fceec0;
+  --status-hold-fg:       #7a6418;
+  --status-hold-dot:      #e0bf52;
+
+  --status-failed-bg:     #fbd6da;
+  --status-failed-fg:     #8b3140;
+  --status-failed-dot:    #d77d8a;
+
+  --status-delayed-bg:    var(--pastel-red);
+  --status-delayed-fg:    #8b1d1d;
+  --status-delayed-dot:   #dc2626;
+
+  --status-issue-bg:      var(--pastel-rose);
+  --status-issue-fg:      var(--pastel-rose-d);
+  --status-issue-dot:     #c2348a;
+
+  --status-na-bg:         var(--bg-sunken);
+  --status-na-fg:         var(--text-tertiary);
+  --status-na-dot:        var(--border-default);
+
+  /* ── Priority ── */
+  --priority-p0: #dc2626;
+  --priority-p1: #d97706;
+  --priority-p2: var(--text-tertiary);
+  --priority-p3: var(--border-default);
+
+  /* ── Tag categories ── */
+  --tag-patch-bg:     var(--pastel-yellow);
+  --tag-patch-fg:     var(--pastel-yellow-d);
+  --tag-followup-bg:  var(--pastel-blue);
+  --tag-followup-fg:  var(--accent-700);
+  --tag-general-bg:   var(--bg-sunken);
+  --tag-general-fg:   var(--text-secondary);
+  --tag-support-bg:   var(--pastel-orange);
+  --tag-support-fg:   var(--pastel-orange-d);
+  --tag-test-bg:      var(--pastel-violet);
+  --tag-test-fg:      var(--pastel-violet-d);
+
+  /* ── Radii ── */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 20px;
+  --r-3xl: 24px;
+  --r-pill: 999px;
+
+  /* ── Shadows ── */
+  --shadow-ring: 0 0 0 1px rgb(var(--ring));
+  --shadow-xs:   0 1px 2px rgba(20, 22, 30, 0.04);
+  --shadow-sm:   0 1px 2px rgba(20, 22, 30, 0.04), 0 0 0 1px rgb(var(--ring));
+  --shadow-md:   0 6px 16px rgba(20, 22, 30, 0.06), 0 0 0 1px rgb(var(--ring));
+  --shadow-lg:   0 18px 40px rgba(20, 22, 30, 0.10), 0 0 0 1px rgb(var(--ring));
+  --shadow-drawer: -16px 0 40px rgba(20, 22, 30, 0.08);
+
+  /* ── Typography ── */
+  --font-display: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-body:    'Noto Sans KR', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── Density ── */
+  --row-h: 40px;
+  --row-h-tight: 32px;
+  --topbar-h: 60px;
+  --sidebar-w: 240px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root {
+  margin: 0; padding: 0;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "ss04", "ss05", "tnum" 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+::selection { background: var(--accent-100); color: var(--accent-800); }
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; padding: 0; }
+input, select, textarea { font-family: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.tnum  { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.mono  { font-family: var(--font-mono); font-feature-settings: "tnum" 1; }
+.upper { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+
+.display, h1.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.t-display    { font-family: var(--font-display); font-weight: 500; font-size: 56px; line-height: 1.15; letter-spacing: -1.68px; }
+.t-section    { font-family: var(--font-display); font-weight: 500; font-size: 48px; line-height: 1.15; letter-spacing: -1.44px; }
+.t-card-title { font-family: var(--font-display); font-weight: 600; font-size: 24px; line-height: 1.20; letter-spacing: -0.02em; }
+.t-subhead    { font-family: var(--font-body);    font-weight: 500; font-size: 22px; line-height: 1.35; letter-spacing: -0.44px; }
+.t-feature    { font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.35; }
+.t-body       { font-family: var(--font-body);    font-weight: 400; font-size: 16px; line-height: 1.50; letter-spacing: -0.16px; }
+.t-body-sm    { font-family: var(--font-body);    font-weight: 400; font-size: 14px; line-height: 1.50; }
+.t-button     { font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1.30; letter-spacing: 0.01em; }
+.t-caption    { font-family: var(--font-body);    font-weight: 400; font-size: 12.5px; line-height: 1.45; color: var(--text-secondary); }
+.t-overline   { font-family: var(--font-display); font-weight: 600; font-size: 10.5px; line-height: 1.0; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(20, 22, 30, 0.12); border-radius: 999px; border: 2px solid var(--bg-canvas); }
+::-webkit-scrollbar-thumb:hover { background: rgba(20, 22, 30, 0.22); }
+
+@keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes slideIn { from { transform: translateX(100%) } to { transform: translateX(0) } }
+@keyframes wave {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  10%, 30%      { transform: rotate(14deg); }
+  20%           { transform: rotate(-8deg); }
+  40%           { transform: rotate(-4deg); }
+  50%           { transform: rotate(10deg); }
+}
+@keyframes botBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+.page-slot { animation: pageFade 0.2s ease; }
