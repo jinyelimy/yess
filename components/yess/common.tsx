@@ -522,7 +522,10 @@ export const FilterChip: React.FC<
 );
 
 export const FieldLabel: React.FC<React.PropsWithChildren<{ required?: boolean }>> = ({ children, required }) => (
-  <div className="t-overline" style={{ marginBottom: 6, color: "var(--text-tertiary)" }}>
+  <div
+    className="t-overline"
+    style={{ marginBottom: 6, color: "var(--text-tertiary)", display: "flex", alignItems: "center", gap: 6 }}
+  >
     {children}
     {required && <span style={{ color: "var(--danger)", marginLeft: 4 }}>*</span>}
   </div>
@@ -544,7 +547,7 @@ const fieldInputStyle: React.CSSProperties = {
 };
 
 export const FieldInput: React.FC<
-  React.InputHTMLAttributes<HTMLInputElement> & { label?: string; required?: boolean; mono?: boolean }
+  React.InputHTMLAttributes<HTMLInputElement> & { label?: React.ReactNode; required?: boolean; mono?: boolean }
 > = ({ label, required, mono, style, ...rest }) => (
   <div style={{ display: "flex", flexDirection: "column" }}>
     {label && <FieldLabel required={required}>{label}</FieldLabel>}
@@ -565,7 +568,7 @@ export const FieldInput: React.FC<
 );
 
 export const FieldTextarea: React.FC<
-  React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label?: string; required?: boolean }
+  React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label?: React.ReactNode; required?: boolean }
 > = ({ label, required, style, ...rest }) => (
   <div style={{ display: "flex", flexDirection: "column" }}>
     {label && <FieldLabel required={required}>{label}</FieldLabel>}
@@ -595,7 +598,7 @@ export const FieldTextarea: React.FC<
 
 export const FieldSelect: React.FC<
   React.SelectHTMLAttributes<HTMLSelectElement> & {
-    label?: string;
+    label?: React.ReactNode;
     required?: boolean;
     options?: Array<string | { value: string; label: string }>;
   }
@@ -633,6 +636,81 @@ export const FieldSelect: React.FC<
     </select>
   </div>
 );
+
+/* ─────────────────────────────────────────────
+   Modal — centered dialog with header / body / footer
+   ───────────────────────────────────────────── */
+export const Modal: React.FC<{
+  open: boolean;
+  onClose: () => void;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
+  width?: number;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}> = ({ open, onClose, title, subtitle, width = 520, children, footer }) => {
+  if (!open) return null;
+  const border = "1px solid var(--border-subtle)";
+  return (
+    <>
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(20,22,30,0.4)",
+          zIndex: 70,
+        }}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width,
+          maxWidth: "96vw",
+          maxHeight: "85vh",
+          background: "var(--bg-canvas)",
+          boxShadow: "var(--shadow-drawer)",
+          borderRadius: "var(--r-lg)",
+          zIndex: 71,
+          display: "flex",
+          flexDirection: "column",
+          transition: "width 0.22s ease",
+        }}
+      >
+        <div
+          style={{
+            padding: "18px 20px",
+            borderBottom: border,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 12,
+          }}
+        >
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700, letterSpacing: "-0.01em" }}>
+              {title}
+            </div>
+            {subtitle && (
+              <div style={{ marginTop: 4, fontSize: 12.5, color: "var(--text-tertiary)" }}>{subtitle}</div>
+            )}
+          </div>
+          <IconBtn icon="close" onClick={onClose} title="닫기" />
+        </div>
+        <div style={{ padding: "18px 20px", overflowY: "auto", flex: 1 }}>{children}</div>
+        {footer && (
+          <div style={{ padding: "14px 20px", borderTop: border, display: "flex", justifyContent: "flex-end", gap: 8 }}>
+            {footer}
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
 
 /* ─────────────────────────────────────────────
    Mascot / PageHeader / SectionHeader / EmptyState

@@ -25,6 +25,11 @@ export type Company = {
   scheduled: string;
   applied: string;
   issue: string;
+  /**
+   * 서비스 종료가 시작되는 차수 코드 (예: "2026-D02").
+   * 이 차수부터 generate-targets에서 제외됨. undefined면 정상 운영.
+   */
+  terminatedAtRound?: string;
 };
 
 export type WorkItem = {
