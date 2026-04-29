@@ -131,10 +131,10 @@
   --status-na-dot:        var(--border-default);
 
   /* ── Priority ── */
-  --priority-p0: #dc2626;
-  --priority-p1: #d97706;
-  --priority-p2: var(--text-tertiary);
-  --priority-p3: var(--border-default);
+  --priority-p0: #ef4d7e;
+  --priority-p1: #f59e0b;
+  --priority-p2: #14b8a6;
+  --priority-p3: #8b5cf6;
 
   /* ── Tag categories ── */
   --tag-patch-bg:     var(--pastel-yellow);

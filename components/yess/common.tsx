@@ -83,50 +83,130 @@ export const Icon: React.FC<{
 };
 
 /* ─────────────────────────────────────────────
-   Avatar — illustrated avatar for "이주성", initial circles otherwise
+   Avatar — illustrated avatar variants per user
    ───────────────────────────────────────────── */
-const IridIllustration: React.FC<{ size?: number }> = ({ size = 28 }) => (
-  <svg
-    viewBox="0 0 64 64"
-    width={size}
-    height={size}
-    style={{ display: "block", borderRadius: "50%" }}
-    aria-hidden="true"
-  >
-    <defs>
-      <linearGradient id="irid-bg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="var(--pastel-teal)" />
-        <stop offset="100%" stopColor="var(--accent-100)" />
-      </linearGradient>
-      <clipPath id="irid-clip"><circle cx="32" cy="32" r="32" /></clipPath>
-    </defs>
-    <g clipPath="url(#irid-clip)">
-      <rect width="64" height="64" fill="url(#irid-bg)" />
-      <path d="M6 64 C 12 50, 22 46, 32 46 C 42 46, 52 50, 58 64 Z" fill="var(--accent-700)" />
-      <path d="M28 46 L32 52 L36 46 Z" fill="#ffffff" opacity="0.85" />
-      <rect x="29" y="40" width="6" height="6" fill="#e3b899" />
-      <ellipse cx="32" cy="30" rx="13" ry="14.5" fill="#f0c9a8" />
-      <path d="M19 26 C 19 16, 28 13, 33 13 C 41 13, 46 19, 46 26 C 46 23, 42 21, 39 22 C 37 18, 30 18, 27 22 C 24 22, 20 23, 19 26 Z" fill="#2b1f17" />
-      <ellipse cx="19.5" cy="31" rx="1.5" ry="2.4" fill="#e3b899" />
-      <g fill="none" stroke="var(--accent-600)" strokeWidth="1.3" strokeLinecap="round">
-        <circle cx="26" cy="30.5" r="3.6" fill="#ffffff" fillOpacity="0.55" />
-        <circle cx="38" cy="30.5" r="3.6" fill="#ffffff" fillOpacity="0.55" />
-        <line x1="29.6" y1="30.5" x2="34.4" y2="30.5" />
-        <line x1="22.4" y1="30.5" x2="20" y2="30" />
-        <line x1="41.6" y1="30.5" x2="44" y2="30" />
-      </g>
-      <circle cx="26" cy="30.7" r="0.95" fill="#1c1c1e" />
-      <circle cx="38" cy="30.7" r="0.95" fill="#1c1c1e" />
-      <path d="M22.5 26.5 L29 26" stroke="#2b1f17" strokeWidth="1.1" strokeLinecap="round" fill="none" />
-      <path d="M35 26 L41.5 26.5" stroke="#2b1f17" strokeWidth="1.1" strokeLinecap="round" fill="none" />
-      <circle cx="22.5" cy="35" r="1.6" fill="var(--pastel-coral)" opacity="0.55" />
-      <circle cx="41.5" cy="35" r="1.6" fill="var(--pastel-coral)" opacity="0.55" />
-      <path d="M29 38 Q 32 40.4, 35 38" stroke="#5a3a2a" strokeWidth="1.2" strokeLinecap="round" fill="none" />
-    </g>
-  </svg>
-);
+export type AvatarIllust =
+  | "irid"
+  | "rose"
+  | "sage"
+  | "amber"
+  | "lilac"
+  | "mint"
+  | "peach"
+  | "ocean"
+  | "ivory"
+  | "cocoa";
 
-export type AvatarUser = Partial<User> & { name?: string; initial?: string; color?: string; illustration?: "irid" };
+type IllustParams = {
+  bgFrom: string;
+  bgTo: string;
+  body: string;       // 어깨/옷 색
+  hair: string;       // 머리 색
+  skin: string;       // 피부 톤
+  hairStyle: 1 | 2 | 3; // 1: 짧은 곱슬, 2: 사이드 가르마, 3: 긴 머리(양 옆 흘러내림)
+  mouth: "smile" | "neutral" | "open";
+  glasses: boolean;
+  blush: boolean;
+};
+
+const ILLUST_VARIANTS: Record<AvatarIllust, IllustParams> = {
+  irid:  { bgFrom: "var(--pastel-teal)",   bgTo: "var(--accent-100)",     body: "var(--accent-700)", hair: "#2b1f17", skin: "#f0c9a8", hairStyle: 1, mouth: "smile",   glasses: true,  blush: true  },
+  rose:  { bgFrom: "#fbe1ea",              bgTo: "var(--pastel-yellow)",  body: "#b8377a",           hair: "#3b2410", skin: "#f5d5b5", hairStyle: 3, mouth: "smile",   glasses: false, blush: true  },
+  sage:  { bgFrom: "var(--pastel-yellow)", bgTo: "var(--pastel-teal)",    body: "#187574",           hair: "#1a1a1a", skin: "#e3b899", hairStyle: 2, mouth: "neutral", glasses: false, blush: false },
+  amber: { bgFrom: "#fde4c5",              bgTo: "#f8d4a3",               body: "#d97706",           hair: "#5a3a2a", skin: "#f5d5b5", hairStyle: 3, mouth: "smile",   glasses: false, blush: true  },
+  lilac: { bgFrom: "var(--pastel-violet)", bgTo: "var(--pastel-blue)",    body: "#7a4fd0",           hair: "#1f1209", skin: "#efc8a3", hairStyle: 3, mouth: "open",    glasses: true,  blush: true  },
+  mint:  { bgFrom: "#d6f0e1",              bgTo: "var(--pastel-yellow)",  body: "#1f5a2d",           hair: "#0d0d0d", skin: "#f5d5b5", hairStyle: 2, mouth: "neutral", glasses: false, blush: false },
+  peach: { bgFrom: "var(--pastel-coral)",  bgTo: "#fde4c5",               body: "#c2348a",           hair: "#3a1810", skin: "#f7d7b5", hairStyle: 1, mouth: "neutral", glasses: false, blush: false },
+  ocean: { bgFrom: "var(--pastel-blue)",   bgTo: "var(--pastel-teal)",    body: "#5b76fe",           hair: "#1a1a1a", skin: "#e8c19c", hairStyle: 3, mouth: "smile",   glasses: true,  blush: true  },
+  ivory: { bgFrom: "#fff3e0",              bgTo: "var(--pastel-coral)",   body: "#a06016",           hair: "#3b1f0c", skin: "#f0c9a8", hairStyle: 3, mouth: "smile",   glasses: false, blush: true  },
+  cocoa: { bgFrom: "#e6d8c5",              bgTo: "#f8d4a3",               body: "#5a3a2a",           hair: "#1a0a05", skin: "#d4a585", hairStyle: 1, mouth: "neutral", glasses: false, blush: false },
+};
+
+const IllustAvatar: React.FC<{ size?: number; variant: AvatarIllust }> = ({ size = 28, variant }) => {
+  const v = ILLUST_VARIANTS[variant] ?? ILLUST_VARIANTS.irid;
+  const id = `irid-${variant}`;
+
+  // hairStyle: 1 = 짧은 곱슬 / 2 = 사이드 가르마 / 3 = 긴 생머리 양 갈래
+  const hairPath =
+    v.hairStyle === 1
+      ? "M19 26 C 19 16, 28 13, 33 13 C 41 13, 46 19, 46 26 C 46 23, 42 21, 39 22 C 37 18, 30 18, 27 22 C 24 22, 20 23, 19 26 Z"
+      : v.hairStyle === 2
+      ? "M19 27 C 19 16, 27 12, 33 12 C 42 12, 47 19, 47 28 C 44 24, 38 22, 34 23 C 33 19, 28 19, 25 22 C 22 22, 20 24, 19 27 Z"
+      : "M17 36 C 17 32, 17 24, 19 20 C 22 14, 28 11, 33 11 C 42 11, 47 18, 47 28 C 47 34, 47 38, 47 42 C 45 36, 44 32, 43 28 C 42 23, 38 21, 34 22 C 31 19, 27 19, 25 22 C 22 22, 20 25, 20 28 C 20 34, 19 38, 17 42 Z";
+
+  const earsVisible = v.hairStyle !== 3;
+
+  const mouthEl =
+    v.mouth === "smile" ? (
+      <path d="M29 38 Q 32 40.4, 35 38" stroke="#5a3a2a" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+    ) : v.mouth === "open" ? (
+      <ellipse cx="32" cy="38.6" rx="2" ry="1.4" fill="#5a3a2a" />
+    ) : (
+      <line x1="30" y1="38.7" x2="34" y2="38.7" stroke="#5a3a2a" strokeWidth="1.2" strokeLinecap="round" />
+    );
+
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      style={{ display: "block", borderRadius: "50%" }}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={v.bgFrom} />
+          <stop offset="100%" stopColor={v.bgTo} />
+        </linearGradient>
+        <clipPath id={`${id}-clip`}><circle cx="32" cy="32" r="32" /></clipPath>
+      </defs>
+      <g clipPath={`url(#${id}-clip)`}>
+        <rect width="64" height="64" fill={`url(#${id}-bg)`} />
+        {/* 어깨/옷 */}
+        <path d="M6 64 C 12 50, 22 46, 32 46 C 42 46, 52 50, 58 64 Z" fill={v.body} />
+        {/* 칼라 포인트 */}
+        <path d="M28 46 L32 52 L36 46 Z" fill="#ffffff" opacity="0.85" />
+        {/* 목 */}
+        <rect x="29" y="40" width="6" height="6" fill={v.skin} />
+        {/* 얼굴 */}
+        <ellipse cx="32" cy="30" rx="13" ry="14.5" fill={v.skin} />
+        {/* 헤어 */}
+        <path d={hairPath} fill={v.hair} />
+        {/* 귀 (긴머리에선 가려짐) */}
+        {earsVisible && <ellipse cx="19.5" cy="31" rx="1.5" ry="2.4" fill={v.skin} />}
+        {earsVisible && <ellipse cx="44.5" cy="31" rx="1.5" ry="2.4" fill={v.skin} />}
+        {/* 안경 또는 눈 외곽 */}
+        {v.glasses ? (
+          <g fill="none" stroke="var(--accent-600)" strokeWidth="1.3" strokeLinecap="round">
+            <circle cx="26" cy="30.5" r="3.6" fill="#ffffff" fillOpacity="0.55" />
+            <circle cx="38" cy="30.5" r="3.6" fill="#ffffff" fillOpacity="0.55" />
+            <line x1="29.6" y1="30.5" x2="34.4" y2="30.5" />
+            <line x1="22.4" y1="30.5" x2="20" y2="30" />
+            <line x1="41.6" y1="30.5" x2="44" y2="30" />
+          </g>
+        ) : null}
+        {/* 눈동자 */}
+        <circle cx="26" cy="30.7" r="0.95" fill="#1c1c1e" />
+        <circle cx="38" cy="30.7" r="0.95" fill="#1c1c1e" />
+        {/* 눈썹 */}
+        <path d="M22.5 26.5 L29 26" stroke={v.hair} strokeWidth="1.1" strokeLinecap="round" fill="none" />
+        <path d="M35 26 L41.5 26.5" stroke={v.hair} strokeWidth="1.1" strokeLinecap="round" fill="none" />
+        {/* 볼터치 */}
+        {v.blush && <circle cx="22.5" cy="35" r="1.6" fill="var(--pastel-coral)" opacity="0.55" />}
+        {v.blush && <circle cx="41.5" cy="35" r="1.6" fill="var(--pastel-coral)" opacity="0.55" />}
+        {/* 입 */}
+        {mouthEl}
+      </g>
+    </svg>
+  );
+};
+
+export type AvatarUser = Partial<User> & {
+  name?: string;
+  initial?: string;
+  color?: string;
+  illustration?: AvatarIllust;
+};
 
 export const Avatar: React.FC<{ user: AvatarUser; size?: number; ring?: boolean }> = ({
   user,
@@ -134,7 +214,7 @@ export const Avatar: React.FC<{ user: AvatarUser; size?: number; ring?: boolean 
   ring = false,
 }) => {
   const color = user?.color || "var(--text-secondary)";
-  if (user?.illustration === "irid") {
+  if (user?.illustration) {
     return (
       <div
         style={{
@@ -149,7 +229,7 @@ export const Avatar: React.FC<{ user: AvatarUser; size?: number; ring?: boolean 
         }}
         title={user?.name}
       >
-        <IridIllustration size={size} />
+        <IllustAvatar size={size} variant={user.illustration} />
       </div>
     );
   }

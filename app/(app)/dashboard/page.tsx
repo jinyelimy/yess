@@ -113,7 +113,7 @@ const StatCard: React.FC<{ label: string; value: string; sub?: string; accent?: 
 }) => (
   <div
     style={{
-      background: danger ? "#fdecec" : accent ? "var(--accent-50)" : "var(--bg-surface)",
+      background: danger ? "#fde6e6" : accent ? "var(--accent-50)" : "var(--bg-surface)",
       borderRadius: "var(--r-lg)",
       boxShadow: "var(--shadow-ring)",
       padding: "14px 16px",
@@ -199,12 +199,12 @@ const RoundBar: React.FC<{
   const segs = [
     { v: applied,    color: "var(--chart-purple)",  label: "반영"  },
     { v: prog,       color: "var(--chart-yellow)",  label: "진행"  },
-    { v: notStarted, color: "var(--chart-neutral)", label: "미진행" },
     { v: fail,       color: "var(--chart-pink)",    label: "실패"  },
+    { v: notStarted, color: "var(--chart-neutral)", label: "미진행" },
   ];
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
+    <div style={{ padding: "10px 12px", borderRadius: "var(--r-md)", background: "var(--bg-surface-2)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
           <span className="mono" style={{ fontWeight: 700, fontSize: 12, color: "var(--accent-700)" }}>{code}</span>
           <span style={{ fontSize: 13 }}>{name}</span>
@@ -225,19 +225,131 @@ const RoundBar: React.FC<{
   );
 };
 
+type WorkloadTier = "missing" | "behind" | "onTrack" | "done";
+
+const TIER_STYLE: Record<
+  WorkloadTier,
+  {
+    bar: string;
+    rowBg: string;
+    nameColor: string;
+    nameWeight: number;
+    ratioColor: string;
+    badgeBg: string;
+    badgeFg: string;
+    badgeBorder: string;
+  }
+> = {
+  missing: {
+    bar: "var(--chart-pink)",
+    rowBg: "rgba(251, 212, 212, 0.45)",
+    nameColor: "var(--pastel-rose-d)",
+    nameWeight: 700,
+    ratioColor: "var(--pastel-rose-d)",
+    badgeBg: "var(--pastel-red)",
+    badgeFg: "var(--pastel-rose-d)",
+    badgeBorder: "var(--pastel-darkred)",
+  },
+  behind: {
+    bar: "#f0b478",
+    rowBg: "rgba(255, 230, 205, 0.55)",
+    nameColor: "var(--text-primary)",
+    nameWeight: 600,
+    ratioColor: "var(--pastel-orange-d)",
+    badgeBg: "var(--pastel-orange)",
+    badgeFg: "var(--pastel-orange-d)",
+    badgeBorder: "rgba(138, 74, 23, 0.18)",
+  },
+  onTrack: {
+    bar: "var(--chart-yellow)",
+    rowBg: "transparent",
+    nameColor: "var(--text-primary)",
+    nameWeight: 500,
+    ratioColor: "var(--text-secondary)",
+    badgeBg: "var(--bg-sunken)",
+    badgeFg: "var(--text-secondary)",
+    badgeBorder: "var(--border-subtle)",
+  },
+  done: {
+    bar: "var(--chart-purple)",
+    rowBg: "transparent",
+    nameColor: "var(--text-primary)",
+    nameWeight: 500,
+    ratioColor: "var(--accent-700)",
+    badgeBg: "var(--accent-50)",
+    badgeFg: "var(--accent-700)",
+    badgeBorder: "var(--accent-200)",
+  },
+};
+
 const AssigneeBar: React.FC<{ name: string; done: number; total: number }> = ({ name, done, total }) => {
-  const pct = Math.round((done / total) * 100);
+  const pct = total > 0 ? (done / total) * 100 : 0;
+  const remaining = total - done;
+  const tier: WorkloadTier =
+    done === 0 ? "missing" : done >= total ? "done" : pct < 50 ? "behind" : "onTrack";
+  const t = TIER_STYLE[tier];
+
+  const labelText =
+    tier === "missing"
+      ? `미착수 ${total}건`
+      : tier === "behind"
+      ? `지연 ${remaining}건`
+      : tier === "done"
+      ? "완료 ✓"
+      : `${remaining}건 남음`;
+
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "120px 1fr 60px", alignItems: "center", gap: 12, padding: "6px 0" }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "120px 1fr 52px 92px",
+        alignItems: "center",
+        gap: 12,
+        padding: "9px 12px",
+        borderRadius: "var(--r-md)",
+        background: t.rowBg,
+        transition: "background 0.2s",
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
         <MiniAvatar name={name} size={20} />
-        <span style={{ fontSize: 13, fontWeight: 500 }}>{name}</span>
+        <span style={{ fontSize: 13, fontWeight: t.nameWeight, color: t.nameColor }}>{name}</span>
       </div>
       <div style={{ height: 8, background: "var(--bg-sunken)", borderRadius: 999, overflow: "hidden" }}>
-        <div style={{ height: "100%", width: `${pct}%`, background: "var(--chart-purple)", borderRadius: 999 }}></div>
+        <div
+          style={{
+            height: "100%",
+            width: `${pct}%`,
+            background: t.bar,
+            borderRadius: 999,
+            transition: "width 0.3s",
+          }}
+        ></div>
       </div>
-      <div className="mono tnum" style={{ fontSize: 11.5, fontWeight: 600, color: "var(--text-secondary)", textAlign: "right" }}>
+      <div
+        className="mono tnum"
+        style={{ fontSize: 11.5, fontWeight: 700, color: t.ratioColor, textAlign: "right" }}
+      >
         {done}/{total}
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            padding: "3px 10px",
+            borderRadius: "var(--r-pill)",
+            background: t.badgeBg,
+            color: t.badgeFg,
+            border: `1px solid ${t.badgeBorder}`,
+            fontSize: 10.5,
+            fontWeight: 700,
+            letterSpacing: "0.02em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {labelText}
+        </span>
       </div>
     </div>
   );
@@ -352,19 +464,64 @@ const MyTaskRow: React.FC<{ title: string; status: StatusKey; priority: Priority
   </div>
 );
 
-/* Round Item Table — 패치 차수 및 항목 (compact) */
+/* Round Item Table — 패치 차수 및 항목 (유지보수 관점, 내 담당 기준) */
+const DueChip: React.FC<{ due: string; overdue?: boolean; soon?: boolean; muted?: boolean }> = ({
+  due,
+  overdue,
+  soon,
+  muted,
+}) => {
+  const color = overdue
+    ? "var(--pastel-rose-d)"
+    : soon
+    ? "var(--pastel-orange-d)"
+    : muted
+    ? "var(--text-tertiary)"
+    : "var(--text-secondary)";
+  const bg = overdue
+    ? "var(--pastel-red)"
+    : soon
+    ? "var(--pastel-orange)"
+    : "var(--bg-sunken)";
+  return (
+    <span
+      className="mono tnum"
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        padding: "2px 8px",
+        borderRadius: "var(--r-pill)",
+        fontSize: 10.5,
+        fontWeight: 700,
+        letterSpacing: "0.02em",
+        color,
+        background: bg,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {due}
+    </span>
+  );
+};
+
 const RoundItemRow: React.FC<{
   no: string;
   code: string;
   name: string;
-  ver: string;
   cat: string;
-  target: number;
-  done: number;
-  fail: number;
-}> = ({ no, code, name, ver, cat, target, done, fail }) => {
-  const total = target;
-  const pct = Math.round((done / total) * 100);
+  due: string;
+  overdue?: boolean;
+  soon?: boolean;
+  mine: { done: number; total: number };
+}> = ({ no, code, name, cat, due, overdue, soon, mine }) => {
+  const pct = mine.total > 0 ? (mine.done / mine.total) * 100 : 0;
+  const tier: WorkloadTier =
+    mine.done >= mine.total ? "done" : mine.done === 0 ? "missing" : overdue || pct < 50 ? "behind" : "onTrack";
+  const t = TIER_STYLE[tier];
+
+  const statusLabel =
+    tier === "missing" ? "미착수" : tier === "behind" ? "지연" : tier === "onTrack" ? "진행중" : "완료 ✓";
+
   return (
     <tr style={{ borderBottom: "1px solid var(--border-subtle)" }}>
       <td style={{ padding: "11px 14px", color: "var(--text-tertiary)", fontSize: 11.5 }} className="mono tnum">{no}</td>
@@ -377,20 +534,40 @@ const RoundItemRow: React.FC<{
       <td style={{ padding: "11px 14px" }}>
         <Badge variant="soft">{cat}</Badge>
       </td>
-      <td style={{ padding: "11px 14px", fontSize: 11.5, color: "var(--text-secondary)" }} className="mono">{ver}</td>
-      <td style={{ padding: "11px 14px", minWidth: 180 }}>
+      <td style={{ padding: "11px 14px" }}>
+        <DueChip due={due} overdue={overdue} soon={soon} muted={tier === "done"} />
+      </td>
+      <td style={{ padding: "11px 14px", minWidth: 150 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ flex: 1, height: 6, borderRadius: 3, background: "var(--chart-neutral)", overflow: "hidden", display: "flex" }}>
-            <div style={{ width: `${(done / total) * 100}%`, background: "var(--chart-purple)" }} />
-            {fail > 0 && <div style={{ width: `${(fail / total) * 100}%`, background: "var(--chart-pink)" }} />}
-          </div>
-          <span className="tnum" style={{ fontSize: 11.5, fontWeight: 600, minWidth: 36, textAlign: "right" }}>
-            {done}/{total}
+          <span
+            className="tnum"
+            style={{ fontSize: 11.5, fontWeight: 700, minWidth: 28, textAlign: "right", color: t.ratioColor }}
+          >
+            {mine.done}/{mine.total}
           </span>
+          <div style={{ flex: 1, height: 6, borderRadius: 3, background: "var(--bg-sunken)", overflow: "hidden" }}>
+            <div style={{ width: `${pct}%`, height: "100%", background: t.bar, borderRadius: 3 }} />
+          </div>
         </div>
       </td>
-      <td style={{ padding: "11px 14px", textAlign: "right" }} className="tnum">
-        <span style={{ fontSize: 12.5, fontWeight: 700, color: pct >= 80 ? "var(--accent-700)" : "var(--text-primary)" }}>{pct}%</span>
+      <td style={{ padding: "11px 14px", textAlign: "right" }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            padding: "3px 10px",
+            borderRadius: "var(--r-pill)",
+            background: t.badgeBg,
+            color: t.badgeFg,
+            border: `1px solid ${t.badgeBorder}`,
+            fontSize: 10.5,
+            fontWeight: 700,
+            letterSpacing: "0.02em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {statusLabel}
+        </span>
       </td>
     </tr>
   );
@@ -401,7 +578,7 @@ const RoundItemTable: React.FC = () => (
     <table style={{ width: "100%", borderCollapse: "collapse" }}>
       <thead>
         <tr style={{ borderBottom: "1px solid var(--border-strong)" }}>
-          {["No", "항목", "카테고리", "버전", "진행", "완료율"].map((h, i) => (
+          {["No", "항목", "카테고리", "마감", "내 진행", "상태"].map((h, i) => (
             <th
               key={h}
               style={{
@@ -420,11 +597,11 @@ const RoundItemTable: React.FC = () => (
         </tr>
       </thead>
       <tbody>
-        <RoundItemRow no="01" code="2026-D01-001" name="간이지급명세서 양식 갱신"  cat="연중패치"     ver="v3.2.1" target={28} done={24} fail={1} />
-        <RoundItemRow no="02" code="2026-Y01-001" name="연말정산 부속서류 정비"     cat="연말정산패치" ver="v3.2.1" target={28} done={18} fail={2} />
-        <RoundItemRow no="03" code="2026-I01-001" name="A고객사 맞춤 공제 항목"     cat="개별패치"     ver="v3.2.1" target={1}  done={1}  fail={0} />
-        <RoundItemRow no="04" code="2026-E01-001" name="원천세 W-219 양식 추가"     cat="추가패치"     ver="v3.3.0" target={14} done={4}  fail={0} />
-        <RoundItemRow no="05" code="2026-D02-001" name="국세청 가이드 4월 개정"     cat="연중패치"     ver="v3.3.0" target={28} done={9}  fail={0} />
+        <RoundItemRow no="01" code="2026-D01-001" name="간이지급명세서 양식 갱신"  cat="연중패치"     due="D-3"  soon         mine={{ done: 4, total: 4 }} />
+        <RoundItemRow no="02" code="2026-Y01-001" name="연말정산 부속서류 정비"     cat="연말정산패치" due="D-16"               mine={{ done: 3, total: 4 }} />
+        <RoundItemRow no="03" code="2026-I01-001" name="A고객사 맞춤 공제 항목"     cat="개별패치"     due="D-26"               mine={{ done: 0, total: 1 }} />
+        <RoundItemRow no="04" code="2026-E01-001" name="원천세 W-219 양식 추가"     cat="추가패치"     due="D+2"  overdue      mine={{ done: 0, total: 2 }} />
+        <RoundItemRow no="05" code="2026-D02-001" name="국세청 가이드 4월 개정"     cat="연중패치"     due="D-9"                mine={{ done: 1, total: 4 }} />
       </tbody>
     </table>
   </div>
@@ -522,15 +699,15 @@ export default function DashboardPage() {
               <span style={{ width: 10, height: 10, borderRadius: 3, background: "var(--chart-yellow)" }}></span>진행
             </span>
             <span style={{ display: "flex", gap: 5, alignItems: "center" }}>
-              <span style={{ width: 10, height: 10, borderRadius: 3, background: "var(--chart-neutral)" }}></span>미진행
+              <span style={{ width: 10, height: 10, borderRadius: 3, background: "var(--chart-pink)" }}></span>실패
             </span>
             <span style={{ display: "flex", gap: 5, alignItems: "center" }}>
-              <span style={{ width: 10, height: 10, borderRadius: 3, background: "var(--chart-pink)" }}></span>실패
+              <span style={{ width: 10, height: 10, borderRadius: 3, background: "var(--chart-neutral)" }}></span>미진행
             </span>
           </div>
         }
       />
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4 }}>
         <RoundBar code="2026-D01" name="연중패치 01"     applied={60} prog={24} notStarted={8}  fail={3} />
         <RoundBar code="2026-Y01" name="연말정산패치 01" applied={18} prog={6}  notStarted={8}  fail={2} />
         <RoundBar code="2026-I01" name="개별패치 01"     applied={14} prog={0}  notStarted={0}  fail={0} />
@@ -627,13 +804,37 @@ export default function DashboardPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 16, marginBottom: 20 }}>
             {RoundsCard}
             <Card padding={20}>
-              <SectionHeader overline="담당자별 현황" title="Assignee Workload" />
-              <AssigneeBar name="김지혜" done={18} total={24} />
-              <AssigneeBar name="조민수" done={15} total={24} />
-              <AssigneeBar name="박선영" done={11} total={24} />
-              <AssigneeBar name="정우성" done={8}  total={24} />
-              <AssigneeBar name="한가영" done={6}  total={24} />
-              <AssigneeBar name="최도훈" done={5}  total={24} />
+              <SectionHeader
+                overline="담당자별 현황"
+                title="Assignee Workload"
+                right={
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "3px 10px",
+                      borderRadius: "var(--r-pill)",
+                      background: "var(--pastel-red)",
+                      color: "var(--pastel-rose-d)",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--chart-pink)" }} />
+                    지연 위험 3명
+                  </span>
+                }
+              />
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4 }}>
+                <AssigneeBar name="최도훈" done={0} total={4} />
+                <AssigneeBar name="한가영" done={1} total={5} />
+                <AssigneeBar name="정우성" done={1} total={4} />
+                <AssigneeBar name="박선영" done={2} total={4} />
+                <AssigneeBar name="조민수" done={3} total={5} />
+                <AssigneeBar name="김지혜" done={4} total={4} />
+              </div>
             </Card>
           </div>
 

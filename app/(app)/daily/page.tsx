@@ -7,6 +7,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import {
   Avatar,
+  type AvatarUser,
   Btn,
   Card,
   Icon,
@@ -43,7 +44,7 @@ const CategoryChip: React.FC<{ cat: DailyTaskCategory }> = ({ cat }) => {
   );
 };
 
-const MemberChip: React.FC<{ user: { name?: string; initial?: string; color?: string; illustration?: "irid" } }> = ({ user }) => (
+const MemberChip: React.FC<{ user: AvatarUser }> = ({ user }) => (
   <span
     style={{
       display: "inline-flex",

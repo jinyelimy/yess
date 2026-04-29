@@ -2,13 +2,25 @@
 // _design_input/data.js 의 정적 데이터를 TypeScript로 옮긴 모듈.
 // v0 프로토타입에서는 백엔드 없이 이 데이터로 화면을 구동한다.
 
+export type AvatarIllust =
+  | "irid"
+  | "rose"
+  | "sage"
+  | "amber"
+  | "lilac"
+  | "mint"
+  | "peach"
+  | "ocean"
+  | "ivory"
+  | "cocoa";
+
 export type User = {
   id: string;
   name: string;
   initial: string;
   color: string;
   role?: string;
-  illustration?: "irid";
+  illustration?: AvatarIllust;
 };
 
 export type Company = {
@@ -141,26 +153,26 @@ export type StatusMeta = {
 };
 
 export const TF_USERS: User[] = [
-  { id: "U001", name: "이주성", initial: "이", role: "TF_LEAD",   color: "#5b76fe", illustration: "irid" },
-  { id: "U002", name: "김지혜", initial: "김", role: "TF_MEMBER", color: "#d97706" },
-  { id: "U003", name: "조민수", initial: "조", role: "TF_MEMBER", color: "#187574" },
-  { id: "U004", name: "박선영", initial: "박", role: "TF_MEMBER", color: "#7a4fd0" },
+  { id: "U001", name: "이주성", initial: "이", role: "TF_LEAD",   color: "#5b76fe", illustration: "irid"  },
+  { id: "U002", name: "김지혜", initial: "김", role: "TF_MEMBER", color: "#d97706", illustration: "amber" },
+  { id: "U003", name: "조민수", initial: "조", role: "TF_MEMBER", color: "#187574", illustration: "sage"  },
+  { id: "U004", name: "박선영", initial: "박", role: "TF_MEMBER", color: "#7a4fd0", illustration: "lilac" },
 ];
 
 export const MAINTAINERS: User[] = [
-  { id: "M011", name: "김지혜", initial: "김", color: "#d97706" },
-  { id: "M012", name: "조민수", initial: "조", color: "#187574" },
-  { id: "M013", name: "박선영", initial: "박", color: "#7a4fd0" },
-  { id: "M014", name: "정우성", initial: "정", color: "#c2348a" },
-  { id: "M015", name: "한가영", initial: "한", color: "#5b76fe" },
-  { id: "M016", name: "최도훈", initial: "최", color: "#1f5a2d" },
+  { id: "M011", name: "김지혜", initial: "김", color: "#d97706", illustration: "amber" },
+  { id: "M012", name: "조민수", initial: "조", color: "#187574", illustration: "sage"  },
+  { id: "M013", name: "박선영", initial: "박", color: "#7a4fd0", illustration: "lilac" },
+  { id: "M014", name: "정우성", initial: "정", color: "#c2348a", illustration: "peach" },
+  { id: "M015", name: "한가영", initial: "한", color: "#5b76fe", illustration: "ocean" },
+  { id: "M016", name: "최도훈", initial: "최", color: "#1f5a2d", illustration: "mint"  },
 ];
 
 export const PATCH_ASSIGNEES: User[] = [
-  { id: "P001", name: "이주성", initial: "이", color: "#5b76fe", illustration: "irid" },
-  { id: "P002", name: "진예림", initial: "진", color: "#c2348a" },
-  { id: "P003", name: "전수현", initial: "전", color: "#187574" },
-  { id: "P004", name: "차진병", initial: "차", color: "#7a4fd0" },
+  { id: "P001", name: "이주성", initial: "이", color: "#5b76fe", illustration: "irid"  },
+  { id: "P002", name: "진예림", initial: "진", color: "#c2348a", illustration: "rose"  },
+  { id: "P003", name: "전수현", initial: "전", color: "#187574", illustration: "ivory" },
+  { id: "P004", name: "차진병", initial: "차", color: "#7a4fd0", illustration: "cocoa" },
 ];
 
 export const ASSIGNEES: User[] = [
